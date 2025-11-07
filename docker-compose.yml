@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  hello-world-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hello-world-java21
+    image: hello-world:latest
+    restart: "no"  # No reiniciar automáticamente
+    
+    # Variables de entorno (opcional)
+    environment:
+      - JAVA_OPTS=-Xmx512m -Xms256m
+      - TZ=Europe/Madrid
+    
+    # Volúmenes para desarrollo (opcional)
+    volumes:
+      - ./logs:/app/logs
+    
+    # Red personalizada (opcional)
+    networks:
+      - hello-world-network
+    
+    # Comando personalizado para desarrollo
+    # Descomenta la siguiente línea si quieres ejecutar en modo desarrollo
+    # command: ["mvn", "exec:java", "-Dexec.mainClass=com.example.app.HelloWorldApplication"]
+    
+    # Healthcheck removido - no es necesario para una aplicación que se ejecuta una vez
+
+# Red personalizada
+networks:
+  hello-world-network:
+    driver: bridge
+
+# Volúmenes nombrados (opcional)
+volumes:
+  maven-cache:
+    driver: local
