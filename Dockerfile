@@ -22,10 +22,12 @@ ENV PATH=$MAVEN_HOME/bin:$PATH
 COPY pom.xml .
 COPY core/pom.xml core/
 COPY app/pom.xml app/
+COPY domain/pom.xml domain/
 
 # Copiar código fuente
 COPY core/src ./core/src
 COPY app/src ./app/src
+COPY domain/src ./domain/src
 
 # Verificar versiones
 RUN java -version && mvn -version

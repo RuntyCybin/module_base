@@ -5,10 +5,11 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-        <parent>
+    <parent>
         <groupId>com.example</groupId>
         <artifactId>hello-world-parent</artifactId>
         <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>hello-world-domain</artifactId>

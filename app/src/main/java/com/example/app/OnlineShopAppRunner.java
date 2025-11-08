@@ -7,16 +7,16 @@ import com.example.core.SystemUtils;
  * Aplicación principal Hello World modularizada
  * Demuestra el uso de JDK 21 con arquitectura modular
  */
-public class HelloWorldApplication {
+public class OnlineShopAppRunner {
     
     private final HelloWorldService helloWorldService;
     
-    public HelloWorldApplication() {
+    public OnlineShopAppRunner() {
         this.helloWorldService = new HelloWorldService();
     }
     
     public static void main(String[] args) {
-        HelloWorldApplication app = new HelloWorldApplication();
+        OnlineShopAppRunner app = new OnlineShopAppRunner();
         app.run();
     }
     
