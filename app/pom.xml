@@ -7,23 +7,49 @@
 
     <parent>
         <groupId>com.example</groupId>
-        <artifactId>hello-world-parent</artifactId>
+        <artifactId>parent</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>hello-world-app</artifactId>
+    <artifactId>app</artifactId>
     <packaging>jar</packaging>
 
-    <name>Hello World Application</name>
-    <description>Módulo de aplicación principal que ejecuta Hello World</description>
+    <name>App de tienda online</name>
+    <description>App modular para un negocio online</description>
 
     <dependencies>
         <!-- Dependencia del módulo core -->
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>hello-world-core</artifactId>
+            <artifactId>core</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>restport</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>ddbbport</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!-- sin <version>, la coge del parent -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

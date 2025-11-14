@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>hello-world-parent</artifactId>
+    <artifactId>parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
@@ -27,7 +27,21 @@
         <module>core</module>
         <module>app</module>
         <module>domain</module>
+        <module>restport</module>
+        <module>ddbbport</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>3.4.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <pluginManagement>

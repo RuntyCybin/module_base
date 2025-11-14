@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,11 +11,11 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>domain</artifactId>
+    <artifactId>ddbbport</artifactId>
     <packaging>jar</packaging>
 
-    <name>Domain</name>
-    <description>Módulo de dominio con las entidades</description>
+    <name>ddbbport</name>
+    <description>Módulo de puerto de la base de datos</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -24,6 +24,12 @@
     </properties>
 
     <dependencies>
-        <!-- Dependencias del módulo domain -->
+        <!-- Driver JDBC de PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
+        </dependency>
     </dependencies>
+
 </project>
