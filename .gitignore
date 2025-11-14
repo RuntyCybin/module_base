@@ -23,12 +23,6 @@
 hs_err_pid*
 replay_pid*
 
-*.lst
+.lst
+**/target/**
 .idea/
-target/
-app/target/
-app/target/*.lst
-core/target/
-domain/target/
-ddbbport/target/
-restport/target/
