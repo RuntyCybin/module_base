@@ -26,3 +26,7 @@ replay_pid*
 .lst
 **/target/**
 .idea/
+createdFiles.lst
+dependency-reduced-pom.xml
+inputFiles.lst
+pom.properties
