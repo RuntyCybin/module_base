@@ -1,3 +1,5 @@
+package com.example.domain;
+
 public class CategoriaArticulo {
     private String id;
     private String nombre;
