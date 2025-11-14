@@ -1,0 +1,12 @@
+application:
+  name: tienda-online-modular
+  version: 1.0.0
+  description: Hello World Application
+  author: Nicolas Shelevoy Shelevoy
+  email: nico_dev@protonmail.com
+  website: https://example.com
+  license: MIT
+  license-url: https://opensource.org/licenses/MIT
+  copyright: Copyright © 2025 Nicolas Shelevoy Shelevoy
+  copyright-year: 2025
+  copyright-owner: Nicolas Shelevoy Shelevoy
