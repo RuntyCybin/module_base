@@ -23,11 +23,15 @@ COPY pom.xml .
 COPY core/pom.xml core/
 COPY app/pom.xml app/
 COPY domain/pom.xml domain/
+COPY restport/pom.xml restport/
+COPY ddbbport/pom.xml ddbbport/
 
 # Copiar código fuente
 COPY core/src ./core/src
 COPY app/src ./app/src
 COPY domain/src ./domain/src
+COPY restport/src ./restport/src
+COPY ddbbport/src ./ddbbport/src
 
 # Verificar versiones
 RUN java -version && mvn -version
@@ -39,4 +43,4 @@ RUN mvn clean package -DskipTests
 EXPOSE 8080
 
 # Comando por defecto para ejecutar la aplicación
-CMD ["java", "-jar", "app/target/hello-world-app-1.0.0.jar"]
+CMD ["java", "-jar", "app/target/app-1.0.0.jar"]

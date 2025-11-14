@@ -25,6 +25,30 @@ services:
     # command: ["mvn", "exec:java", "-Dexec.mainClass=com.example.app.HelloWorldApplication"]
     
     # Healthcheck removido - no es necesario para una aplicación que se ejecuta una vez
+    # Dependencias: espera a que PostgreSQL esté listo
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: hello-world-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=tiendaonline
+      - TZ=Europe/Madrid
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - hello-world-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 # Red personalizada
 networks:
@@ -34,4 +58,6 @@ networks:
 # Volúmenes nombrados (opcional)
 volumes:
   maven-cache:
+    driver: local
+  postgres-data:
     driver: local
