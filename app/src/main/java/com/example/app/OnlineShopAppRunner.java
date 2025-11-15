@@ -31,7 +31,7 @@ public class OnlineShopAppRunner {
      * Ejecuta la aplicación principal
      */
     public void run() {
-        System.out.println("=== Aplicación Tienda online Modularizada ===");
+        System.out.println("=== Aplicación Tienda online Modular ===");
         System.out.println();
         
         // Mostrar mensaje principal

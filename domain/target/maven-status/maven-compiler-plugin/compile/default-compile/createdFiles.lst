@@ -1,2 +1,2 @@
-CategoriaArticulo.class
-Articulo.class
+com/example/domain/Articulo.class
+com/example/domain/CategoriaArticulo.class

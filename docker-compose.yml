@@ -4,7 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: hello-world-java21
-    image: hello-world:latest
     restart: "no"  # No reiniciar automáticamente
     
     # Variables de entorno (opcional)
@@ -12,17 +11,30 @@ services:
       - JAVA_OPTS=-Xmx512m -Xms256m
       - TZ=Europe/Madrid
     
-    # Volúmenes para desarrollo (opcional)
+    # Volúmenes para desarrollo - monta el código fuente para cambios en caliente
     volumes:
       - ./logs:/app/logs
+      - ./pom.xml:/app/pom.xml
+      - ./core:/app/core
+      - ./app:/app/app
+      - ./domain:/app/domain
+      - ./restport:/app/restport
+      - ./ddbbport:/app/ddbbport
+      - maven-cache:/root/.m2  # Cache de Maven para acelerar compilaciones
     
     # Red personalizada (opcional)
     networks:
       - hello-world-network
     
-    # Comando personalizado para desarrollo
-    # Descomenta la siguiente línea si quieres ejecutar en modo desarrollo
-    # command: ["mvn", "exec:java", "-Dexec.mainClass=com.example.app.HelloWorldApplication"]
+    # Comando para desarrollo: compila y ejecuta en cada inicio
+    # Esto permite cambios en el código sin reconstruir la imagen
+    command: >
+      sh -c "
+        echo '🔨 Compilando aplicación...' &&
+        mvn clean install -DskipTests &&
+        echo '▶️  Ejecutando aplicación...' &&
+        cd app && mvn exec:java
+      "
     
     # Healthcheck removido - no es necesario para una aplicación que se ejecuta una vez
     # Dependencias: espera a que PostgreSQL esté listo

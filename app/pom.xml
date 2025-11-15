@@ -54,6 +54,16 @@
 
     <build>
         <plugins>
+            <!-- Plugin para ejecutar la aplicación en desarrollo -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.example.app.OnlineShopAppRunner</mainClass>
+                </configuration>
+            </plugin>
+            
             <!-- Plugin para crear JAR ejecutable -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>hello-world-parent</artifactId>
+    <artifactId>parent</artifactId>
     <groupId>com.example</groupId>
     <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>hello-world-app</artifactId>
-  <name>Hello World Application</name>
-  <description>Módulo de aplicación principal que ejecuta Hello World</description>
+  <artifactId>app</artifactId>
+  <name>App de tienda online</name>
+  <description>App modular para un negocio online</description>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <mainClass>com.example.app.OnlineShopAppRunner</mainClass>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
         <executions>
@@ -22,7 +30,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.example.app.HelloWorldApplication</mainClass>
+                  <mainClass>com.example.app.OnlineShopAppRunner</mainClass>
                 </transformer>
               </transformers>
             </configuration>

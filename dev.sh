@@ -18,6 +18,11 @@ case "$1" in
         echo "▶️  Ejecutando la aplicación (sin reconstruir)..."
         docker-compose up
         ;;
+    "restart")
+        echo "🔄 Reiniciando contenedor (útil después de cambios en código)..."
+        docker-compose restart hello-world-app
+        docker-compose up hello-world-app
+        ;;
     "stop")
         echo "⏹️  Deteniendo contenedores..."
         docker-compose down
@@ -42,9 +47,10 @@ case "$1" in
         echo "Uso: ./dev.sh [comando]"
         echo ""
         echo "Comandos disponibles:"
-        echo "  build, (vacío)  - Reconstruye y ejecuta (RECOMENDADO para cambios en código)"
+        echo "  build, (vacío)  - Reconstruye la imagen y ejecuta (solo si cambias Dockerfile/pom.xml)"
         echo "  rebuild         - Reconstruye sin caché (para cambios en Dockerfile/pom.xml)"
         echo "  run             - Ejecuta sin reconstruir"
+        echo "  restart         - Reinicia el contenedor (RECOMENDADO para cambios en código Java)"
         echo "  stop            - Detiene los contenedores"
         echo "  logs            - Muestra los logs"
         echo "  clean           - Limpia todo (contenedores, imágenes, volúmenes)"
