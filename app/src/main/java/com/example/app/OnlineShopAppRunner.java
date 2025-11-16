@@ -14,11 +14,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class OnlineShopAppRunner {
     
     private final HelloWorldService helloWorldService;
-    private final ArticlesDdbbEngine databaseEngine;
     
     public OnlineShopAppRunner() {
         this.helloWorldService = new HelloWorldService();
-        this.databaseEngine = new ArticlesDdbbEngine();
     }
     
     public static void main(String[] args) {
@@ -56,6 +54,6 @@ public class OnlineShopAppRunner {
         System.out.println();
 
         // Demostrar conexión a la base de datos
-        //DatabaseExample.ejemploConsultaSelect();
+        ArticlesDdbbEngine.ejemploConsultaSelect();
     }
 }
