@@ -1,15 +1,21 @@
 services:
-  hello-world-app:
+  tienda-online-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: hello-world-java21
+    container_name: tienda-online-app-jdk21
     restart: "no"  # No reiniciar automáticamente
     
     # Variables de entorno (opcional)
     environment:
       - JAVA_OPTS=-Xmx512m -Xms256m
       - TZ=Europe/Madrid
+      # Configurar URL de base de datos para usar host.docker.internal (accede al host donde postgres está expuesto)
+      - DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/tiendaonline
+    
+    # Exponer puerto de la aplicación
+    ports:
+      - "8080:8080"
     
     # Volúmenes para desarrollo - monta el código fuente para cambios en caliente
     volumes:
@@ -21,10 +27,6 @@ services:
       - ./restport:/app/restport
       - ./ddbbport:/app/ddbbport
       - maven-cache:/root/.m2  # Cache de Maven para acelerar compilaciones
-    
-    # Red personalizada (opcional)
-    networks:
-      - hello-world-network
     
     # Comando para desarrollo: compila y ejecuta en cada inicio
     # Esto permite cambios en el código sin reconstruir la imagen
@@ -40,10 +42,14 @@ services:
     # Dependencias: espera a que PostgreSQL esté listo
     depends_on:
       - postgres
+    
+    # Red personalizada
+    networks:
+      - tienda-online-network
 
   postgres:
     image: postgres:15-alpine
-    container_name: hello-world-postgres
+    container_name: tienda-online-app-postgres
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres
@@ -54,8 +60,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      # Montar scripts SQL de inicialización
+      - ./init-db:/docker-entrypoint-initdb.d
     networks:
-      - hello-world-network
+      - tienda-online-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -64,7 +72,7 @@ services:
 
 # Red personalizada
 networks:
-  hello-world-network:
+  tienda-online-network:
     driver: bridge
 
 # Volúmenes nombrados (opcional)

@@ -1,6 +1,6 @@
-# Hello World - Java 21 con Maven 3.9.11 (Modularizado)
+# Tienda Online - Java 21 con Maven 3.9.11 (Modularizado)
 
-Una aplicación "Hello World" modularizada desarrollada con **JDK 21** y **Maven 3.9.11**, preparada para ejecutarse en Docker usando Docker Compose.
+Una aplicación de tienda online modularizada desarrollada con **JDK 21** y **Maven 3.9.11**, preparada para ejecutarse en Docker usando Docker Compose.
 
 ## 🚀 Características
 
@@ -57,7 +57,7 @@ docker-compose up --build -d
 docker-compose logs -f
 
 # Ver logs del servicio específico
-docker-compose logs -f hello-world-app
+docker-compose logs -f tienda-online-app
 ```
 
 ### 3. Detener la aplicación
@@ -79,26 +79,26 @@ docker-compose down -v
 mvn clean compile
 
 # Ejecutar la aplicación
-mvn exec:java -Dexec.mainClass=com.example.HelloWorld
+mvn exec:java -Dexec.mainClass=com.example.app.OnlineShopAppRunner
 
 # Crear JAR ejecutable
 mvn clean package
 
 # Ejecutar el JAR
-java -jar target/hello-world-1.0.0.jar
+java -jar app/target/app-1.0.0.jar
 ```
 
 ### Docker (sin Docker Compose)
 
 ```bash
 # Construir la imagen
-docker build -t hello-world:latest .
+docker build -t tienda-online-app:latest .
 
 # Ejecutar el contenedor
-docker run --rm hello-world:latest
+docker run --rm tienda-online-app:latest
 
 # Ejecutar con nombre personalizado
-docker run --name mi-hello-world --rm hello-world:latest
+docker run --name mi-tienda-online --rm tienda-online-app:latest
 ```
 
 ## 📊 Salida Esperada

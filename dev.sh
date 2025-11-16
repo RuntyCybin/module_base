@@ -20,8 +20,8 @@ case "$1" in
         ;;
     "restart")
         echo "🔄 Reiniciando contenedor (útil después de cambios en código)..."
-        docker-compose restart hello-world-app
-        docker-compose up hello-world-app
+        docker-compose restart tienda-online-app
+        docker-compose up tienda-online-app
         ;;
     "stop")
         echo "⏹️  Deteniendo contenedores..."
@@ -41,7 +41,7 @@ case "$1" in
         ;;
     "shell")
         echo "🐚 Abriendo shell en el contenedor..."
-        docker-compose exec hello-world-app /bin/bash || docker-compose run --rm hello-world-app /bin/bash
+        docker-compose exec tienda-online-app /bin/bash || docker-compose run --rm tienda-online-app /bin/bash
         ;;
     *)
         echo "Uso: ./dev.sh [comando]"
