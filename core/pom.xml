@@ -18,6 +18,23 @@
     <description>Módulo core con la lógica de negocio y utilidades</description>
 
     <dependencies>
-        <!-- Dependencias del módulo core -->
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>domain</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>ddbbport</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!-- sin <version>, la coge del parent -->
+        </dependency>
     </dependencies>
 </project>

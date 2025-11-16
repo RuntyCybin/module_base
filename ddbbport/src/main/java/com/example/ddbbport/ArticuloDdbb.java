@@ -1,9 +1,8 @@
-package com.example.domain;
+package com.example.ddbbport;
 
 import java.sql.Timestamp;
 
-public class Articulo {
-    
+public class ArticuloDdbb {
     private Integer id;
     private String nombre;
     private Timestamp createdAt;
@@ -11,11 +10,7 @@ public class Articulo {
     private double precio;
     private int stock;
 
-    public Integer getId() {
-        return id;
-    }
-    
-    public Articulo(Integer id, String nombre, Timestamp createdAt, String descripcion, double precio, int stock) {
+    public ArticuloDdbb(Integer id, String nombre, Timestamp createdAt, int precio, String descripcion, int stock) {
         this.id = id;
         this.nombre = nombre;
         this.createdAt = createdAt;
@@ -24,8 +19,16 @@ public class Articulo {
         this.stock = stock;
     }
 
+    public Integer getId() {
+        return id;
+    }
+    
     public String getNombre() {
         return nombre;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
     
     public String getDescripcion() {
@@ -35,12 +38,8 @@ public class Articulo {
     public double getPrecio() {
         return precio;
     }
-
+    
     public int getStock() {
         return stock;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
     }
 }

@@ -57,6 +57,5 @@ public class OnlineShopAppRunner {
 
         // Demostrar conexión a la base de datos
         //DatabaseExample.ejemploConsultaSelect();
-        this.databaseEngine.ejemploDatosArticulos();
     }
 }

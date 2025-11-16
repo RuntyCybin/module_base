@@ -1,2 +1,4 @@
 com/example/core/HelloWorldService.class
+com/example/core/ArticuloService.class
+com/example/core/ArticuloServiceImpl.class
 com/example/core/SystemUtils.class

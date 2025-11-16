@@ -6,38 +6,54 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ArticlesDdbbEngine {
 
-  private static final String DB_URL = System.getenv().getOrDefault("DATASOURCE_URL",
-          "jdbc:postgresql://localhost:5432/tiendaonline");
-  private static final String DB_USER = System.getenv().getOrDefault("DATASOURCE_USERNAME",
-          "postgres");
-  private static final String DB_PASSWORD = System.getenv().getOrDefault("DATASOURCE_PASSWORD",
-          "postgres");
+  public Connection conectar() throws SQLException {
+    return DriverManager.getConnection(ConstantesDdbbPort.DB_URL,
+        ConstantesDdbbPort.DB_USER,
+        ConstantesDdbbPort.DB_PASSWORD);
+  }
 
-
-  public void ejemploDatosArticulos() {
+  public List<ArticuloDdbb> getArticulos() {
     System.out.println("=== Ejemplo de datos de artículos ===");
 
-    try (final Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+    List<ArticuloDdbb> articulos = new ArrayList<>();
+
+    try (final Connection connection = conectar()) {
       System.out.println("✅ Conexión establecida exitosamente!");
 
       try (final Statement stmt = connection.createStatement();
-           final ResultSet rs = stmt.executeQuery("SELECT * FROM articulos")) {
+          final ResultSet rs = stmt.executeQuery("SELECT * FROM articulos")) {
         while (rs.next()) {
-          System.out.println("ID: " + rs.getInt("id"));
-          System.out.println("Articulo: " + rs.getString("titulo_art"));
-          System.out.println("Fecha de creación: " + rs.getString("createdat"));
+          ArticuloDdbb articulo = new ArticuloDdbb(
+              rs.getInt("id"),
+              rs.getString("titulo_art"),
+              rs.getTimestamp("created_at"),
+              rs.getInt("precio"),
+              rs.getString("descripcion"),
+              rs.getInt("stock"));
+          System.out.println("ID: " + articulo.getId());
+          System.out.println("Articulo: " + articulo.getNombre());
+
+          articulos.add(articulo);
         }
+
       }
+      connection.close();
 
       System.out.println("✅ Datos de artículos obtenidos exitosamente!");
-
     } catch (final SQLException e) {
       System.err.println("❌ Error al conectar: " + e.getMessage());
       e.printStackTrace();
     }
+      
+    return articulos;
   }
 
   /**
@@ -47,12 +63,14 @@ public class ArticlesDdbbEngine {
   public static void ejemploConexionSimple() {
     System.out.println("=== Ejemplo 1: Conexión Simple ===");
 
-    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+    try (Connection connection = DriverManager.getConnection(ConstantesDdbbPort.DB_URL,
+        ConstantesDdbbPort.DB_USER,
+        ConstantesDdbbPort.DB_PASSWORD)) {
       System.out.println("✅ Conexión establecida exitosamente!");
 
       // Verificar la versión de PostgreSQL
       try (Statement stmt = connection.createStatement();
-           ResultSet rs = stmt.executeQuery("SELECT version()")) {
+          ResultSet rs = stmt.executeQuery("SELECT version()")) {
 
         if (rs.next()) {
           System.out.println("Versión de PostgreSQL: " + rs.getString(1));
@@ -74,9 +92,11 @@ public class ArticlesDdbbEngine {
 
     String query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' LIMIT 5";
 
-    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-         Statement stmt = connection.createStatement();
-         ResultSet rs = stmt.executeQuery(query)) {
+    try (Connection connection = DriverManager.getConnection(ConstantesDdbbPort.DB_URL,
+        ConstantesDdbbPort.DB_USER,
+        ConstantesDdbbPort.DB_PASSWORD);
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery(query)) {
 
       System.out.println("Tablas en la base de datos:");
       while (rs.next()) {
@@ -97,12 +117,14 @@ public class ArticlesDdbbEngine {
     System.out.println("\n=== Ejemplo 3: INSERT con PreparedStatement ===");
 
     String insertQuery = """
-            INSERT INTO articulos (nombre, precio, categoria_id)
-            VALUES (?, ?, ?)
-            """;
+        INSERT INTO articulos (nombre, precio, categoria_id)
+        VALUES (?, ?, ?)
+        """;
 
-    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-         PreparedStatement pstmt = connection.prepareStatement(insertQuery)) {
+    try (Connection connection = DriverManager.getConnection(ConstantesDdbbPort.DB_URL,
+        ConstantesDdbbPort.DB_USER,
+        ConstantesDdbbPort.DB_PASSWORD);
+        PreparedStatement pstmt = connection.prepareStatement(insertQuery)) {
 
       // Establecer parámetros
       pstmt.setString(1, "Producto Ejemplo");
@@ -127,7 +149,9 @@ public class ArticlesDdbbEngine {
 
     String updateQuery = "UPDATE articulos SET precio = ? WHERE id = ?";
 
-    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+    try (Connection connection = DriverManager.getConnection(ConstantesDdbbPort.DB_URL,
+        ConstantesDdbbPort.DB_USER,
+        ConstantesDdbbPort.DB_PASSWORD)) {
       // Desactivar auto-commit para controlar la transacción
       connection.setAutoCommit(false);
 
@@ -166,8 +190,10 @@ public class ArticlesDdbbEngine {
 
     String query = "SELECT id, nombre, precio FROM articulos WHERE categoria_id = ?";
 
-    try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-         PreparedStatement pstmt = connection.prepareStatement(query)) {
+    try (Connection connection = DriverManager.getConnection(ConstantesDdbbPort.DB_URL,
+        ConstantesDdbbPort.DB_USER,
+        ConstantesDdbbPort.DB_PASSWORD);
+        PreparedStatement pstmt = connection.prepareStatement(query)) {
 
       pstmt.setInt(1, categoriaId);
 
@@ -194,9 +220,11 @@ public class ArticlesDdbbEngine {
   public static void ejemploMultiplesRecursos() {
     System.out.println("\n=== Ejemplo 6: Múltiples Recursos ===");
 
-    try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery("SELECT current_database(), current_user")) {
+    try (Connection conn = DriverManager.getConnection(ConstantesDdbbPort.DB_URL,
+        ConstantesDdbbPort.DB_USER,
+        ConstantesDdbbPort.DB_PASSWORD);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT current_database(), current_user")) {
 
       if (rs.next()) {
         System.out.println("Base de datos: " + rs.getString(1));
