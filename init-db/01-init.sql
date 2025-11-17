@@ -2,6 +2,7 @@
 -- Este script se ejecuta automáticamente cuando PostgreSQL se inicia por primera vez
 -- (solo cuando la base de datos está vacía)
 
+-- ===================================================================
 -- Crear tabla de artículos
 CREATE TABLE IF NOT EXISTS articulos (
     id SERIAL PRIMARY KEY,
@@ -23,6 +24,26 @@ INSERT INTO articulos (titulo_art, descripcion, precio, stock) VALUES
     ('Samsung Galaxy Watch', 'Reloj inteligente con monitor de salud', 299, 15),
     ('AirPods Pro', 'Auriculares inalámbricos con cancelación de ruido', 249, 30),
     ('MacBook Pro M3', 'Laptop profesional con chip M3', 1999, 8)
+ON CONFLICT DO NOTHING;
+
+
+-- ===================================================================
+-- Crear tabla de categoria artículos
+CREATE TABLE IF NOT EXISTS categoriArt (
+    id SERIAL PRIMARY KEY,
+    titulo_cat VARCHAR(255) NOT NULL,
+    descripcion TEXT
+);
+
+-- Crear índices para mejorar el rendimiento
+CREATE INDEX IF NOT EXISTS idx_categ_articulos_titulo ON categoriArt(titulo_cat);
+
+-- Insertar datos de ejemplo (opcional)
+INSERT INTO categoriArt (titulo_cat, descripcion) VALUES
+    ('telefonos', 'categoria telefono'),
+    ('auriculares', 'de oreja y gaming'),
+    ('relojes', 'relojes inteligentes y no'),
+    ('ordenadores', 'portatiles y sobre mesa')
 ON CONFLICT DO NOTHING;
 
 -- Mostrar mensaje de confirmación

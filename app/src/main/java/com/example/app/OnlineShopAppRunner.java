@@ -29,8 +29,9 @@ public class OnlineShopAppRunner {
      * Ejecuta la aplicación principal
      */
     public void run() {
+        System.out.println("========================================");
         System.out.println("=== Aplicación Tienda online Modular ===");
-        System.out.println();
+        System.out.println("========================================");
         
         // Mostrar mensaje principal
         System.out.println(this.helloWorldService.getGreetingMessage());

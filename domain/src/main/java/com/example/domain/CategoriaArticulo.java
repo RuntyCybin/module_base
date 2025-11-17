@@ -1,17 +1,17 @@
 package com.example.domain;
 
 public class CategoriaArticulo {
-    private String id;
+    private Integer id;
     private String nombre;
     private String descripcion;
 
-    public CategoriaArticulo(String id, String nombre, String descripcion) {
+    public CategoriaArticulo(Integer id, String nombre, String descripcion) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
     
-    public String getId() {
+    public Integer getId() {
         return id;
     }
     
