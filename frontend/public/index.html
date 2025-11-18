@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tienda Online · Catálogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <h1 class="hero__title">Panel de artículos - <small> Tienda Online </small></h1>
+      <p class="hero__subtitle">
+        Consulta el inventario disponible y obtén los datos actualizados directamente desde la API.
+      </p>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="panel__header">
+        <div>
+          <h2 class="panel__title">Artículos disponibles</h2>
+        </div>
+        <div class="stats">
+          <article class="stat">
+            <p class="stat__label">Total</p>
+            <p class="stat__value" id="statTotal">—</p>
+          </article>
+          <article class="stat">
+            <p class="stat__label">Última actualización</p>
+            <p class="stat__value" id="statUpdated">—</p>
+          </article>
+        </div>
+      </div>
+      <button id="reloadBtn" class="button button--primary">Actualizar</button>
+      <a class="button button--ghost" href="http://localhost:8080/swagger-ui/index.html" target="_blank" rel="noreferrer">
+        Ver API
+      </a>
+      <div class="panel__body">
+        <div id="statusMessage" class="status status--info" role="status">
+          Preparando la conexión con la API…
+        </div>
+        <div class="filter">
+          <label class="filter__label" for="searchInput">Buscar</label>
+          <input id="searchInput" type="search" class="filter__input" placeholder="Nombre o descripción" />
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Creado</th>
+              </tr>
+            </thead>
+            <tbody id="articlesBody">
+              <tr>
+                <td colspan="6" class="empty">Cargando artículos…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <template id="articleRow">
+    <tr>
+      <td data-field="id"></td>
+      <td data-field="nombre"></td>
+      <td data-field="descripcion"></td>
+      <td data-field="precio"></td>
+      <td data-field="stock"></td>
+      <td data-field="createdAt"></td>
+    </tr>
+  </template>
+
+  <footer class="footer">
+    <p>Frontend ligero en HTML, CSS y JavaScript nativo.</p>
+  </footer>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

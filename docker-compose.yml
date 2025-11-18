@@ -47,6 +47,19 @@ services:
     networks:
       - tienda-online-network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tienda-online-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      - tienda-online-app
+    networks:
+      - tienda-online-network
+
   postgres:
     image: postgres:15-alpine
     container_name: tienda-online-app-postgres
