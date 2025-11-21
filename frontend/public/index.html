@@ -10,6 +10,15 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <nav class="navbar">
+    <div class="navbar__container">
+      <a href="/" class="navbar__brand">Tienda Online</a>
+      <ul class="navbar__menu">
+        <li><a href="/" class="navbar__link navbar__link--active">Catálogo</a></li>
+        <li><a href="http://localhost:8080/swagger-ui/index.html" target="_blank" class="navbar__link">API Docs</a></li>
+      </ul>
+    </div>
+  </nav>
   <header class="hero">
     <div class="hero__content">
       <h1 class="hero__title">Panel de artículos - <small> Tienda Online </small></h1>
@@ -37,9 +46,6 @@
         </div>
       </div>
       <button id="reloadBtn" class="button button--primary">Actualizar</button>
-      <a class="button button--ghost" href="http://localhost:8080/swagger-ui/index.html" target="_blank" rel="noreferrer">
-        Ver API
-      </a>
       <div class="panel__body">
         <div id="statusMessage" class="status status--info" role="status">
           Preparando la conexión con la API…

@@ -19,7 +19,10 @@ public class ArticlesDdbbEngine {
         ConstantesDdbbPort.DB_USER,
         ConstantesDdbbPort.DB_PASSWORD);
   }
-
+ /**
+   * GET ARTICULOS: Recogen todos los articulos
+   * La conexión se cierra automáticamente al salir del bloque try
+   */
   public List<ArticuloDdbb> getArticulos() {
     System.out.println("=== Ejemplo de datos de artículos ===");
 
@@ -45,7 +48,6 @@ public class ArticlesDdbbEngine {
         }
 
       }
-      connection.close();
 
       System.out.println("✅ Datos de artículos obtenidos exitosamente!");
     } catch (final SQLException e) {
@@ -54,6 +56,43 @@ public class ArticlesDdbbEngine {
     }
       
     return articulos;
+  }
+
+  /**
+   * POST ARTICULO: INSERT de un articulo
+   * Usa PreparedStatement para prevenir SQL injection
+   */
+  public int crearArticulo(ArticuloDdbb articulo) {
+    System.out.println("\n=== Ejemplo 3: INSERT con PreparedStatement ===");
+
+    System.out.println("Articulo: " + articulo.getNombre());
+
+    String insertQuery = """
+        INSERT INTO articulos (titulo_art, descripcion, precio, stock)
+        VALUES (?, ?, ?, ?)
+        """;
+
+    try (Connection connection = DriverManager.getConnection(ConstantesDdbbPort.DB_URL,
+        ConstantesDdbbPort.DB_USER,
+        ConstantesDdbbPort.DB_PASSWORD);
+        PreparedStatement pstmt = connection.prepareStatement(insertQuery)) {
+
+      // Establecer parámetros
+      pstmt.setString(1, articulo.getNombre());
+      pstmt.setString(2, articulo.getDescripcion());
+      pstmt.setDouble(3, articulo.getPrecio());
+      pstmt.setInt(4, articulo.getStock());
+
+      int filasAfectadas = pstmt.executeUpdate();
+      System.out.println("✅ Filas insertadas: " + filasAfectadas);
+      return filasAfectadas;
+
+    } catch (SQLException e) {
+      System.err.println("❌ Error al insertar: " + e.getMessage());
+      e.printStackTrace();
+    }
+
+    return 0;
   }
 
   /**

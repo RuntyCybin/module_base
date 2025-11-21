@@ -1,2 +1,3 @@
+/app/domain/src/main/java/com/example/domain/ArticuloRequest.java
 /app/domain/src/main/java/com/example/domain/CategoriaArticulo.java
 /app/domain/src/main/java/com/example/domain/Articulo.java

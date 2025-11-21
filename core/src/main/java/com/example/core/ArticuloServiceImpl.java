@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.example.ddbbport.ArticlesDdbbEngine;
 import com.example.ddbbport.ArticuloMapper;
 import com.example.domain.Articulo;
+import com.example.domain.ArticuloRequest;
 
 @Service
 public class ArticuloServiceImpl implements ArticuloService {
@@ -20,8 +21,17 @@ public class ArticuloServiceImpl implements ArticuloService {
     }
 
     @Override
-    public void createArticle(Articulo articulo) {
+    public Articulo createArticle(ArticuloRequest articulo) {
         System.out.println("Creating article: " + articulo);
+        
+        int rowsAdded = this.articulosEngine.crearArticulo(
+            this.articuloMapper.toArticuloDdbb(articulo));
+            
+        if (rowsAdded == 0) {
+            return null;
+        } else {
+            return this.articuloMapper.toArticuloFromArticuloRequest(articulo);
+        }
     }
 
     @Override
