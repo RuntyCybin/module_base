@@ -13,6 +13,11 @@ const elements = {
   template: document.getElementById('articleRow'),
   searchInput: document.getElementById('searchInput'),
   reloadBtn: document.getElementById('reloadBtn'),
+  createArticleBtn: document.getElementById('createArticleBtn'),
+  createArticleModal: document.getElementById('createArticleModal'),
+  closeModalBtn: document.getElementById('closeModalBtn'),
+  cancelBtn: document.getElementById('cancelBtn'),
+  createArticleForm: document.getElementById('createArticleForm'),
   statTotal: document.getElementById('statTotal'),
   statUpdated: document.getElementById('statUpdated'),
   statusMessage: document.getElementById('statusMessage'),
@@ -103,9 +108,81 @@ async function fetchArticles({ silent = false } = {}) {
   }
 }
 
+function openModal() {
+  elements.createArticleModal?.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  elements.createArticleModal?.classList.remove('active');
+  document.body.style.overflow = '';
+  elements.createArticleForm?.reset();
+}
+
+async function createArticle(formData) {
+  try {
+    setStatus('Creando artículo…', 'info');
+
+    const response = await fetch(`${API_BASE_URL}/articles`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        titulo: formData.titulo,
+        desc: formData.desc,
+        precio: parseFloat(formData.precio),
+        stock: parseInt(formData.stock, 10),
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `Error ${response.status}`);
+    }
+
+    const newArticle = await response.json();
+    setStatus('Artículo creado correctamente.', 'success');
+    closeModal();
+    
+    // Recargar la lista de artículos
+    await fetchArticles({ silent: true });
+  } catch (error) {
+    console.error(error);
+    setStatus(`Error al crear el artículo: ${error.message}`, 'error');
+  }
+}
+
 function init() {
   elements.reloadBtn?.addEventListener('click', () => fetchArticles());
   elements.searchInput?.addEventListener('input', applyFilter);
+  
+  // Modal handlers
+  elements.createArticleBtn?.addEventListener('click', openModal);
+  elements.closeModalBtn?.addEventListener('click', closeModal);
+  elements.cancelBtn?.addEventListener('click', closeModal);
+  elements.createArticleModal?.addEventListener('click', (e) => {
+    if (e.target === elements.createArticleModal || e.target.classList.contains('modal__overlay')) {
+      closeModal();
+    }
+  });
+
+  // Form submit handler
+  elements.createArticleForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    await createArticle(data);
+  });
+
+  // Close modal on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && elements.createArticleModal?.classList.contains('active')) {
+      closeModal();
+    }
+  });
+
   fetchArticles();
 }
 
