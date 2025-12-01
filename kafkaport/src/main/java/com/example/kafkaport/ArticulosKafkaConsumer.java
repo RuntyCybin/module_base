@@ -9,7 +9,7 @@ import com.example.domain.Articulo;
 public class ArticulosKafkaConsumer {
 
     public static final String TOPIC = "articulos";
-    public static final String GROUP = "grupo_articulos";
+    public static final String GROUP = "articulos-group-dev";
 
     @KafkaListener(topics = TOPIC, groupId = GROUP, containerFactory = "articulosListenerFactory")
     public void onReceiveArticulo(Articulo articulo) {
