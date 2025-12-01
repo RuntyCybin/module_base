@@ -1,3 +1,6 @@
+/app/core/src/main/java/com/example/core/out/ArticuloPublisher.java
+/app/core/src/main/java/com/example/core/in/ArticuloUseCase.java
+/app/core/src/main/java/com/example/core/ArticuloUseCaseImpl.java
 /app/core/src/main/java/com/example/core/ArticuloService.java
 /app/core/src/main/java/com/example/core/HelloWorldService.java
 /app/core/src/main/java/com/example/core/ArticuloServiceImpl.java

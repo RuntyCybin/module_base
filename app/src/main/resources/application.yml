@@ -10,3 +10,7 @@ application:
   copyright: Copyright © 2025 Nicolas Shelevoy Shelevoy
   copyright-year: 2025
   copyright-owner: Nicolas Shelevoy Shelevoy
+
+spring:
+  kafka:
+    bootstrap-servers: kafka:9092

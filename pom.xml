@@ -29,6 +29,8 @@
         <module>domain</module>
         <module>restport</module>
         <module>ddbbport</module>
+        <module>kafkaport</module>
+        <module>kafkaprodport</module>
     </modules>
 
     <dependencyManagement>

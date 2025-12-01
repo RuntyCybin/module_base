@@ -24,14 +24,18 @@ COPY core/pom.xml core/
 COPY app/pom.xml app/
 COPY domain/pom.xml domain/
 COPY restport/pom.xml restport/
+COPY kafkaport/pom.xml kafkaport/
 COPY ddbbport/pom.xml ddbbport/
+COPY kafkaprodport/pom.xml kafkaprodport/
 
 # Copiar código fuente
 COPY core/src ./core/src
 COPY app/src ./app/src
 COPY domain/src ./domain/src
 COPY restport/src ./restport/src
+COPY kafkaport/src ./kafkaport/src
 COPY ddbbport/src ./ddbbport/src
+COPY kafkaprodport/src ./kafkaprodport/src
 
 # Verificar versiones
 RUN java -version && mvn -version

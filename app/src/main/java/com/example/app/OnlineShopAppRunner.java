@@ -20,7 +20,7 @@ public class OnlineShopAppRunner {
     }
     
     public static void main(String[] args) {
-        OnlineShopAppRunner app = new OnlineShopAppRunner();
+        final OnlineShopAppRunner app = new OnlineShopAppRunner();
         app.run();
         SpringApplication.run(OnlineShopAppRunner.class, args);
     }

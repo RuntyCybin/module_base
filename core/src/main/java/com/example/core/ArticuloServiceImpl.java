@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.core.in.ArticuloUseCase;
 import com.example.ddbbport.ArticlesDdbbEngine;
 import com.example.ddbbport.ArticuloMapper;
 import com.example.domain.Articulo;
@@ -14,24 +15,33 @@ public class ArticuloServiceImpl implements ArticuloService {
 
     private final ArticlesDdbbEngine articulosEngine;
     private final ArticuloMapper articuloMapper;
+    private final ArticuloUseCase articuloUseCase;
 
-    public ArticuloServiceImpl(ArticlesDdbbEngine articulosEngine, ArticuloMapper mapper) {
+    public ArticuloServiceImpl(ArticlesDdbbEngine articulosEngine,
+            ArticuloMapper mapper, ArticuloUseCase useCase) {
         this.articulosEngine = articulosEngine;
         this.articuloMapper = mapper;
+        this.articuloUseCase = useCase;
     }
 
     @Override
     public Articulo createArticle(ArticuloRequest articulo) {
         System.out.println("Creating article: " + articulo);
-        
-        int rowsAdded = this.articulosEngine.crearArticulo(
-            this.articuloMapper.toArticuloDdbb(articulo));
-            
+
+        this.articuloUseCase.crearArticulo(new Articulo(1, "Nombre aux", null, "descripcion articulo", 123, 12)); 
+        return new Articulo(1, "Nombre aux", null, "descripcion articulo", 123, 12);
+
+        /*int rowsAdded = this.articulosEngine.crearArticulo(
+                this.articuloMapper.toArticuloDdbb(articulo));
+
         if (rowsAdded == 0) {
             return null;
         } else {
+            Articulo auxArticulo = this.articuloMapper.toArticuloFromArticuloRequest(articulo);
+            // si se ha creado en la base de datos -> insertamos en el pipe de kafka
+            this.articuloUseCase.crearArticulo(auxArticulo); 
             return this.articuloMapper.toArticuloFromArticuloRequest(articulo);
-        }
+        }*/
     }
 
     @Override

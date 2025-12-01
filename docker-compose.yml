@@ -4,14 +4,16 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: tienda-online-app-jdk21
-    restart: "no"  # No reiniciar automáticamente
+    restart: unless-stopped  # Reiniciar automáticamente si falla
     
     # Variables de entorno (opcional)
     environment:
       - JAVA_OPTS=-Xmx512m -Xms256m
       - TZ=Europe/Madrid
-      # Configurar URL de base de datos para usar host.docker.internal (accede al host donde postgres está expuesto)
-      - DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/tiendaonline
+      # Configurar URL de base de datos para usar el nombre del servicio postgres en la red Docker
+      - DATASOURCE_URL=jdbc:postgresql://postgres:5432/tiendaonline
+      - DATASOURCE_USERNAME=postgres
+      - DATASOURCE_PASSWORD=postgres
     
     # Exponer puerto de la aplicación
     ports:
@@ -25,7 +27,9 @@ services:
       - ./app:/app/app
       - ./domain:/app/domain
       - ./restport:/app/restport
+      - ./kafkaport:/app/kafkaport
       - ./ddbbport:/app/ddbbport
+      - ./kafkaprodport:/app/kafkaprodport
       - maven-cache:/root/.m2  # Cache de Maven para acelerar compilaciones
     
     # Comando para desarrollo: compila y ejecuta en cada inicio
@@ -38,10 +42,10 @@ services:
         cd app && mvn exec:java
       "
     
-    # Healthcheck removido - no es necesario para una aplicación que se ejecuta una vez
-    # Dependencias: espera a que PostgreSQL esté listo
+    # Dependencias: espera a que PostgreSQL esté listo y saludable
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     
     # Red personalizada
     networks:
@@ -82,6 +86,28 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  
+  kafka:
+    image: apache/kafka-native
+    container_name: tienda-online-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      # Un solo listener de broker + el de controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9091
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+
+      # KRaft / controller
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9091
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - tienda-online-network
 
 # Red personalizada
 networks:

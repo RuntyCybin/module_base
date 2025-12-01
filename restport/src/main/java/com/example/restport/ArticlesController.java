@@ -28,7 +28,7 @@ public class ArticlesController {
   public ResponseEntity<List<Articulo>> getArticles() {
     System.out.println("Recuperando todos los articulos");
     return new ResponseEntity<>(
-      servicio.getArticles(), 
+      this.servicio.getArticles(),
       HttpStatus.OK);
   }
 
@@ -36,7 +36,7 @@ public class ArticlesController {
   public ResponseEntity<Articulo> crearArticulo(@RequestBody ArticuloRequest request) {
     System.out.println("Creando articulo");
     return new ResponseEntity<>(
-      servicio.createArticle(request), 
+      this.servicio.createArticle(request),
       HttpStatus.CREATED);
   }
 

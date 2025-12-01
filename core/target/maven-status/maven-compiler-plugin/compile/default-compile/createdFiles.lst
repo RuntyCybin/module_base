@@ -1,4 +1,7 @@
+com/example/core/ArticuloServiceImpl.class
+com/example/core/in/ArticuloUseCase.class
 com/example/core/HelloWorldService.class
 com/example/core/ArticuloService.class
-com/example/core/ArticuloServiceImpl.class
+com/example/core/out/ArticuloPublisher.class
+com/example/core/ArticuloUseCaseImpl.class
 com/example/core/SystemUtils.class
