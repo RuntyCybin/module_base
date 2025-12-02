@@ -1,5 +1,6 @@
 package com.example.core;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -28,8 +29,16 @@ public class ArticuloServiceImpl implements ArticuloService {
     public Articulo createArticle(ArticuloRequest articulo) {
         System.out.println("Creating article: " + articulo);
 
-        this.articuloUseCase.crearArticulo(new Articulo(1, "Nombre aux", null, "descripcion articulo", 123, 12)); 
-        return new Articulo(1, "Nombre aux", null, "descripcion articulo", 123, 12);
+        Articulo auxArticulo = new Articulo(
+            1, 
+            "Nombre aux", 
+            new Timestamp(System.currentTimeMillis()), 
+            "descripcion articulo", 
+            123, 
+            12);
+
+        this.articuloUseCase.crearArticulo(auxArticulo); 
+        return auxArticulo;
 
         /*int rowsAdded = this.articulosEngine.crearArticulo(
                 this.articuloMapper.toArticuloDdbb(articulo));

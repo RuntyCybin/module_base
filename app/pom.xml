@@ -33,6 +33,12 @@
 
         <dependency>
             <groupId>com.example</groupId>
+            <artifactId>kafkaport</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.example</groupId>
             <artifactId>restport</artifactId>
             <version>1.0.0</version>
         </dependency>
