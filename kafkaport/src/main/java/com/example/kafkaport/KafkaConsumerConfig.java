@@ -1,6 +1,5 @@
 package com.example.kafkaport;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -15,6 +14,7 @@ import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import com.example.domain.Articulo;
+import reactor.core.publisher.Sinks;
 
 @EnableKafka
 @Configuration
@@ -55,4 +55,8 @@ public class KafkaConsumerConfig {
      * 
      */
 
+    @Bean
+    public Sinks.Many<Articulo> articulosSink() {
+        return Sinks.many().multicast().onBackpressureBuffer();
+    }
 }

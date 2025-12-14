@@ -29,18 +29,7 @@ public class ArticuloServiceImpl implements ArticuloService {
     public Articulo createArticle(ArticuloRequest articulo) {
         System.out.println("Creating article: " + articulo);
 
-        Articulo auxArticulo = new Articulo(
-            1, 
-            "Nombre aux", 
-            new Timestamp(System.currentTimeMillis()), 
-            "descripcion articulo", 
-            123, 
-            12);
-
-        this.articuloUseCase.crearArticulo(auxArticulo); 
-        return auxArticulo;
-
-        /*int rowsAdded = this.articulosEngine.crearArticulo(
+        int rowsAdded = this.articulosEngine.crearArticulo(
                 this.articuloMapper.toArticuloDdbb(articulo));
 
         if (rowsAdded == 0) {
@@ -50,7 +39,7 @@ public class ArticuloServiceImpl implements ArticuloService {
             // si se ha creado en la base de datos -> insertamos en el pipe de kafka
             this.articuloUseCase.crearArticulo(auxArticulo); 
             return this.articuloMapper.toArticuloFromArticuloRequest(articulo);
-        }*/
+        }
     }
 
     @Override

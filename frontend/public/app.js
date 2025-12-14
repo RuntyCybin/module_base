@@ -9,15 +9,10 @@ const state = {
 };
 
 const elements = {
-  tableBody: document.getElementById('articlesBody'),
-  template: document.getElementById('articleRow'),
+  cardsGrid: document.getElementById('articlesGrid'),
+  cardTemplate: document.getElementById('articleCard'),
   searchInput: document.getElementById('searchInput'),
   reloadBtn: document.getElementById('reloadBtn'),
-  createArticleBtn: document.getElementById('createArticleBtn'),
-  createArticleModal: document.getElementById('createArticleModal'),
-  closeModalBtn: document.getElementById('closeModalBtn'),
-  cancelBtn: document.getElementById('cancelBtn'),
-  createArticleForm: document.getElementById('createArticleForm'),
   statTotal: document.getElementById('statTotal'),
   statUpdated: document.getElementById('statUpdated'),
   statusMessage: document.getElementById('statusMessage'),
@@ -34,8 +29,9 @@ const normalize = (text) => (text || '').toLowerCase().normalize('NFD').replace(
 function setStatus(message, variant = 'info') {
   if (!elements.statusMessage) return;
   elements.statusMessage.textContent = message;
-  elements.statusMessage.classList.remove('status--error', 'status--success', 'status--info');
-  elements.statusMessage.classList.add(`status--${variant}`);
+  elements.statusMessage.classList.remove('alert-danger', 'alert-success', 'alert-info');
+  const bootstrapVariant = variant === 'error' ? 'danger' : variant;
+  elements.statusMessage.classList.add(`alert-${bootstrapVariant}`);
 }
 
 function updateStats() {
@@ -46,28 +42,48 @@ function updateStats() {
     : '—';
 }
 
-function renderRows(rows) {
-  elements.tableBody.innerHTML = '';
+const gradients = [
+  'linear-gradient(135deg, #111827 0%, #1f2937 100%)',
+  'linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)',
+  'linear-gradient(135deg, #7c3aed 0%, #6b21a8 100%)',
+  'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+  'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+  'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)',
+];
+
+function pickGradient(index) {
+  return gradients[index % gradients.length];
+}
+
+function renderCards(rows) {
+  if (!elements.cardsGrid || !elements.cardTemplate) return;
+  elements.cardsGrid.innerHTML = '';
 
   if (!rows.length) {
-    elements.tableBody.innerHTML = '<tr><td colspan="6" class="empty">Sin resultados</td></tr>';
+    elements.cardsGrid.innerHTML = `
+      <div class="col">
+        <div class="card h-100 border-0 bg-light d-flex align-items-center justify-content-center">
+          <div class="text-muted py-5">Sin resultados</div>
+        </div>
+      </div>`;
     return;
   }
 
   const fragment = document.createDocumentFragment();
 
-  rows.forEach((item) => {
-    const clone = elements.template.content.cloneNode(true);
-    clone.querySelector('[data-field="id"]').textContent = item.id;
+  rows.forEach((item, idx) => {
+    const clone = elements.cardTemplate.content.cloneNode(true);
+    const card = clone.querySelector('[data-bg]');
+    card.style.backgroundImage = pickGradient(idx);
     clone.querySelector('[data-field="nombre"]').textContent = item.nombre;
-    clone.querySelector('[data-field="descripcion"]').textContent = item.descripcion;
+    clone.querySelector('[data-field="descripcion"]').textContent = item.descripcion || '—';
     clone.querySelector('[data-field="precio"]').textContent = formatCurrency(item.precio);
-    clone.querySelector('[data-field="stock"]').textContent = item.stock;
+    clone.querySelector('[data-field="stock"]').textContent = `Stock: ${item.stock}`;
     clone.querySelector('[data-field="createdAt"]').textContent = formatDate(item.createdAt);
     fragment.appendChild(clone);
   });
 
-  elements.tableBody.appendChild(fragment);
+  elements.cardsGrid.appendChild(fragment);
 }
 
 function applyFilter() {
@@ -76,13 +92,18 @@ function applyFilter() {
     const target = `${item.nombre} ${item.descripcion}`;
     return normalize(target).includes(query);
   });
-  renderRows(filtered);
+  renderCards(filtered);
 }
 
 async function fetchArticles({ silent = false } = {}) {
   if (!silent) {
     setStatus('Consultando API…', 'info');
-    elements.tableBody.innerHTML = '<tr><td colspan="6" class="empty">Cargando artículos…</td></tr>';
+    elements.cardsGrid.innerHTML = `
+      <div class="col">
+        <div class="card h-100 border-0 bg-light d-flex align-items-center justify-content-center">
+          <div class="text-muted py-5">Cargando artículos…</div>
+        </div>
+      </div>`;
   }
 
   try {
@@ -104,86 +125,59 @@ async function fetchArticles({ silent = false } = {}) {
   } catch (error) {
     console.error(error);
     setStatus('No se pudo obtener la información. Inténtalo de nuevo.', 'error');
-    elements.tableBody.innerHTML = '<tr><td colspan="6" class="empty">Error al consultar la API</td></tr>';
+    elements.cardsGrid.innerHTML = `
+      <div class="col">
+        <div class="card h-100 border-0 bg-light d-flex align-items-center justify-content-center">
+          <div class="text-muted py-5">Error al consultar la API</div>
+        </div>
+      </div>`;
   }
 }
 
-function openModal() {
-  elements.createArticleModal?.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
+function setupLiveUpdates() {
+  const url = `${API_BASE_URL}/articles/sse`;
+  const source = new EventSource(url);
 
-function closeModal() {
-  elements.createArticleModal?.classList.remove('active');
-  document.body.style.overflow = '';
-  elements.createArticleForm?.reset();
-}
+  source.onopen = () => {
+    console.log('[SSE] Conectado a', url);
+    setStatus('Conectado al stream de artículos.', 'info');
+  };
 
-async function createArticle(formData) {
-  try {
-    setStatus('Creando artículo…', 'info');
+  source.onmessage = (event) => {
+    try {
+      const articulo = JSON.parse(event.data);
 
-    const response = await fetch(`${API_BASE_URL}/articles`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        titulo: formData.titulo,
-        desc: formData.desc,
-        precio: parseFloat(formData.precio),
-        stock: parseInt(formData.stock, 10),
-      }),
-    });
+      // Evitar duplicados por id
+      const existingIndex = state.articles.findIndex((a) => a.id === articulo.id);
+      if (existingIndex !== -1) {
+        state.articles[existingIndex] = articulo;
+      } else {
+        state.articles.push(articulo);
+      }
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Error ${response.status}`);
+      state.lastUpdated = new Date();
+      updateStats();
+      applyFilter(); // respeta el filtro actual
+
+      console.log('[SSE] Artículo recibido:', articulo);
+    } catch (e) {
+      console.error('[SSE] Error parseando mensaje:', e, event.data);
     }
+  };
 
-    const newArticle = await response.json();
-    setStatus('Artículo creado correctamente.', 'success');
-    closeModal();
-    
-    // Recargar la lista de artículos
-    await fetchArticles({ silent: true });
-  } catch (error) {
-    console.error(error);
-    setStatus(`Error al crear el artículo: ${error.message}`, 'error');
-  }
+  source.onerror = (err) => {
+    console.error('[SSE] Error en el stream:', err);
+    setStatus('Conexión en tiempo real interrumpida. Reintentando…', 'error');
+    // El propio EventSource reintenta por defecto, así que no cerramos
+  };
 }
 
 function init() {
   elements.reloadBtn?.addEventListener('click', () => fetchArticles());
   elements.searchInput?.addEventListener('input', applyFilter);
-  
-  // Modal handlers
-  elements.createArticleBtn?.addEventListener('click', openModal);
-  elements.closeModalBtn?.addEventListener('click', closeModal);
-  elements.cancelBtn?.addEventListener('click', closeModal);
-  elements.createArticleModal?.addEventListener('click', (e) => {
-    if (e.target === elements.createArticleModal || e.target.classList.contains('modal__overlay')) {
-      closeModal();
-    }
-  });
-
-  // Form submit handler
-  elements.createArticleForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-    await createArticle(data);
-  });
-
-  // Close modal on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && elements.createArticleModal?.classList.contains('active')) {
-      closeModal();
-    }
-  });
 
   fetchArticles();
+  setupLiveUpdates();
 }
 
 window.addEventListener('DOMContentLoaded', init);

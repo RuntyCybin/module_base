@@ -23,6 +23,11 @@ case "$1" in
         docker-compose restart tienda-online-app
         docker-compose up tienda-online-app
         ;;
+    "restart-frontend")
+        echo "🔄 Reiniciando contenedor frontend"
+        docker-compose restart frontend
+        docker-compose up frontend
+        ;;
     "stop")
         echo "⏹️  Deteniendo contenedores..."
         docker-compose down
