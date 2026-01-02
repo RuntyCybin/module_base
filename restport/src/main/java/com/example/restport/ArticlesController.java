@@ -1,5 +1,6 @@
 package com.example.restport;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.core.ArticuloService;
@@ -38,12 +40,34 @@ public class ArticlesController {
       HttpStatus.OK);
   }
 
+  @GetMapping("/articlesByName")
+  public ResponseEntity<List<Articulo>> getArticlesByNameFragment(@RequestParam String partNombreArticulo) {
+    System.out.println("ENTRA PARAM: " + partNombreArticulo);
+    return new ResponseEntity<>(
+      this.servicio.getArticlesByPartName(partNombreArticulo),
+      HttpStatus.OK
+    );
+  }
+
   @PostMapping
   public ResponseEntity<Articulo> crearArticulo(@RequestBody ArticuloRequest request) {
     System.out.println("Creando articulo");
     return new ResponseEntity<>(
       this.servicio.createArticle(request),
       HttpStatus.CREATED);
+  }
+
+  @GetMapping("/getOne")
+  public ResponseEntity<Articulo> getArticuloPorId(@RequestParam Long idarticulo) {
+    System.out.println("Obtener articulo por ID");
+    return new ResponseEntity<>(
+            new Articulo(
+                    100, "TEST",
+                    new Timestamp(1970),
+                    "Test desc", 34.43, 3
+            ),
+            HttpStatus.OK
+    );
   }
 
   @GetMapping(path = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

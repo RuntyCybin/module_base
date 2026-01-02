@@ -1,5 +1,6 @@
 services:
   tienda-online-app:
+    profiles: ["app"]
     build:
       context: .
       dockerfile: Dockerfile
@@ -43,15 +44,16 @@ services:
       "
     
     # Dependencias: espera a que PostgreSQL esté listo y saludable
-    depends_on:
-      postgres:
-        condition: service_healthy
+    #depends_on:
+    #  postgres:
+    #    condition: service_healthy
     
     # Red personalizada
     networks:
       - tienda-online-network
 
   frontend:
+    profiles: ["app"]
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -65,6 +67,7 @@ services:
       - tienda-online-network
 
   postgres:
+    profiles: ["infra"]
     image: postgres:15-alpine
     container_name: tienda-online-app-postgres
     restart: unless-stopped
@@ -88,6 +91,7 @@ services:
       retries: 5
   
   kafka:
+    profiles: ["infra"]
     image: apache/kafka-native
     container_name: tienda-online-kafka
     ports:

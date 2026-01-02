@@ -1,10 +1,7 @@
 package com.example.core;
 
-import java.sql.Timestamp;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
-
 import com.example.core.in.ArticuloUseCase;
 import com.example.ddbbport.ArticlesDdbbEngine;
 import com.example.ddbbport.ArticuloMapper;
@@ -37,16 +34,25 @@ public class ArticuloServiceImpl implements ArticuloService {
         } else {
             Articulo auxArticulo = this.articuloMapper.toArticuloFromArticuloRequest(articulo);
             // si se ha creado en la base de datos -> insertamos en el pipe de kafka
-            this.articuloUseCase.crearArticulo(auxArticulo); 
+            this.articuloUseCase.crearArticulo(auxArticulo);
             return this.articuloMapper.toArticuloFromArticuloRequest(articulo);
         }
     }
 
     @Override
     public List<Articulo> getArticles() {
-        System.out.println("Getting articles");
+        System.out.println("Getting articles service");
 
         return this.articulosEngine.getArticulos().stream()
+                .map(art -> articuloMapper.toArticulo(art))
+                .toList();
+    }
+
+    @Override
+    public List<Articulo> getArticlesByPartName(String partOfName) {
+        System.out.println("Getting articles by part of the name service");
+
+        return this.articulosEngine.getArticulosByPartOfName(partOfName).stream()
                 .map(art -> articuloMapper.toArticulo(art))
                 .toList();
     }

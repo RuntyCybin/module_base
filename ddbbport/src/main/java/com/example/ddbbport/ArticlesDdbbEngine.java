@@ -19,12 +19,42 @@ public class ArticlesDdbbEngine {
         ConstantesDdbbPort.DB_USER,
         ConstantesDdbbPort.DB_PASSWORD);
   }
- /**
+
+  public List<ArticuloDdbb> getArticulosByPartOfName(String nameLike) {
+    System.out.println("=== GET artículos que contengan cadena " + nameLike + " ===");
+    List<ArticuloDdbb> articulosResultList = new ArrayList<>();
+    try (final Connection connection = conectar()) {
+      try (final Statement stmt = connection.createStatement();
+          final ResultSet rs = stmt.executeQuery("SELECT * FROM articulos WHERE titulo_art LIKE %" + nameLike + "%")) {
+        while (rs.next()) {
+          ArticuloDdbb articulo = new ArticuloDdbb(
+              rs.getInt("id"),
+              rs.getString("titulo_art"),
+              rs.getTimestamp("created_at"),
+              rs.getInt("precio"),
+              rs.getString("descripcion"),
+              rs.getInt("stock"));
+          System.out.println("ID: " + articulo.getId());
+          System.out.println("Articulo: " + articulo.getNombre());
+
+          articulosResultList.add(articulo);
+        }
+      }
+      System.out.println("✅ Datos de artículos obtenidos exitosamente!");
+    } catch (final SQLException e) {
+      System.err.println("❌ Error al conectar: " + e.getMessage());
+      e.printStackTrace();
+    }
+
+    return articulosResultList;
+  }
+
+  /**
    * GET ARTICULOS: Recogen todos los articulos
    * La conexión se cierra automáticamente al salir del bloque try
    */
   public List<ArticuloDdbb> getArticulos() {
-    System.out.println("=== Ejemplo de datos de artículos ===");
+    System.out.println("=== GET Todos los artículos ===");
 
     List<ArticuloDdbb> articulos = new ArrayList<>();
 
@@ -54,7 +84,7 @@ public class ArticlesDdbbEngine {
       System.err.println("❌ Error al conectar: " + e.getMessage());
       e.printStackTrace();
     }
-      
+
     return articulos;
   }
 
@@ -94,10 +124,19 @@ public class ArticlesDdbbEngine {
 
     return 0;
   }
-  
-  /* ------------------------------------------------------------------------------------ */
-  /* ------------------------------------------------------------------------------------ */
-  /* ------------------------------------------------------------------------------------ */
+
+  /*
+   * -----------------------------------------------------------------------------
+   * -------
+   */
+  /*
+   * -----------------------------------------------------------------------------
+   * -------
+   */
+  /*
+   * -----------------------------------------------------------------------------
+   * -------
+   */
 
   /**
    * Ejemplo 1: Conexión simple con try-with-resources
